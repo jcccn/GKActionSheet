@@ -89,7 +89,11 @@
 @property (nonatomic, strong) NSString *cancelButtonTitle;
 @property (nonatomic, strong) NSMutableArray *items;
 
+@property (nonatomic, assign, getter=isShowing) BOOL showing;
+
 - (void)initSubViews;
+
+- (void)prepareForShow;
 
 @end
 
@@ -177,6 +181,11 @@
 }
 
 - (void)showFromView:(UIView *)view {
+    if (self.isShowing) {
+        return;
+        
+    }
+    
     UIView *superView = view;
     if ( ! view) {
         UIViewController *controller = [UIApplication sharedApplication].keyWindow.rootViewController;
@@ -190,20 +199,41 @@
         [self removeFromSuperview];
     }
     
+    [superView addSubview:self];
+    
+    self.alpha = 0;
+    
+    [self prepareForShow];
+    
+    [UIView animateWithDuration:0.25f animations:^{
+        self.alpha = 1;
+        self.showing = YES;
+    }];
+}
+
+- (void)prepareForShow {
     CGRect frame = self.frame;
-    frame.size = superView.bounds.size;
+    frame.size = self.superview.bounds.size;
     self.frame = frame;
     
     frame = self.contentView.frame;
     frame.origin.x = 0;
     frame.origin.y = CGRectGetHeight(self.bounds) - CGRectGetHeight(self.contentView.bounds);
     self.contentView.frame = frame;
-    
-    [superView addSubview:self];
 }
 
 - (void)dismiss {
-    [self removeFromSuperview];
+    if ( ! self.isShowing) {
+        return;
+    }
+    
+    [UIView animateWithDuration:0.25f animations:^{
+        self.alpha = 0;
+        
+    } completion:^(BOOL finished) {
+        self.showing = NO;
+        [self removeFromSuperview];
+    }];
 }
 
 - (void)cancelButtonClicked:(id)sender {
