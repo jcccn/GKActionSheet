@@ -30,7 +30,19 @@
 }
 
 - (void)showButtonClicked:(id)sender {
-    GKActionSheet *actionSheet = [[GKActionSheet alloc] initWithTitle:@"请选择您的操作" items:nil cancelButtonTitle:@"取消"];
+    GKActionSheetItem *item1 = [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_QQ"] title:@"QQ" handler:^(GKActionSheetItem *item) {
+        NSLog(@"点击了：%@", item.title);
+    }];
+    GKActionSheetItem *item2 = [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_WeChat"] title:@"微信" handler:^(GKActionSheetItem *item) {
+        NSLog(@"点击了：%@", item.title);
+    }];
+    GKActionSheetItem *item3 = [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_WeChat_Moments"] title:@"朋友圈" handler:^(GKActionSheetItem *item) {
+        NSLog(@"点击了：%@", item.title);
+    }];
+    GKActionSheetItem *item4 = [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_Sina"] title:@"微博" handler:^(GKActionSheetItem *item) {
+        NSLog(@"点击了：%@", item.title);
+    }];
+    GKActionSheet *actionSheet = [[GKActionSheet alloc] initWithTitle:@"请选择您的操作" items:@[item1, item2, item3, item4, item1, item2, item3, item4, item1, item2, item3, item4, item1, item2, item3, item4] cancelButtonTitle:@"取消"];
     [actionSheet show];
 }
 
