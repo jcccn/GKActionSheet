@@ -33,6 +33,11 @@
 		9066023F1B27ED1500424684 /* Share_WeChat_Moments@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9066022C1B27ED1500424684 /* Share_WeChat_Moments@2x.png */; };
 		906602401B27ED1500424684 /* Share_Weixin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9066022D1B27ED1500424684 /* Share_Weixin@2x.png */; };
 		906602411B27ED1500424684 /* Share_YoudaoNote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9066022E1B27ED1500424684 /* Share_YoudaoNote@2x.png */; };
+		906602431B2800CD00424684 /* Share_QQZone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 906602421B2800CD00424684 /* Share_QQZone@2x.png */; };
+		906602461B2804AC00424684 /* Share_WeChat_Collection@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 906602441B2804AC00424684 /* Share_WeChat_Collection@2x.png */; };
+		906602471B2804AC00424684 /* Share_WeChat_Collection@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 906602451B2804AC00424684 /* Share_WeChat_Collection@3x.png */; };
+		9066024A1B28087F00424684 /* Share_Safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 906602481B28087F00424684 /* Share_Safari@2x.png */; };
+		9066024B1B28087F00424684 /* Share_Safari@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 906602491B28087F00424684 /* Share_Safari@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +72,11 @@
 		9066022C1B27ED1500424684 /* Share_WeChat_Moments@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Share_WeChat_Moments@2x.png"; sourceTree = "<group>"; };
 		9066022D1B27ED1500424684 /* Share_Weixin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Share_Weixin@2x.png"; sourceTree = "<group>"; };
 		9066022E1B27ED1500424684 /* Share_YoudaoNote@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Share_YoudaoNote@2x.png"; sourceTree = "<group>"; };
+		906602421B2800CD00424684 /* Share_QQZone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Share_QQZone@2x.png"; sourceTree = "<group>"; };
+		906602441B2804AC00424684 /* Share_WeChat_Collection@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Share_WeChat_Collection@2x.png"; sourceTree = "<group>"; };
+		906602451B2804AC00424684 /* Share_WeChat_Collection@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Share_WeChat_Collection@3x.png"; sourceTree = "<group>"; };
+		906602481B28087F00424684 /* Share_Safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Share_Safari@2x.png"; sourceTree = "<group>"; };
+		906602491B28087F00424684 /* Share_Safari@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Share_Safari@3x.png"; sourceTree = "<group>"; };
 		FCA9BE6C1EC398B3DD6938C4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -155,12 +165,17 @@
 				906602231B27ED1500424684 /* Share_Message@2x.png */,
 				906602241B27ED1500424684 /* Share_Pocket@2x.png */,
 				906602251B27ED1500424684 /* Share_QQ@2x.png */,
+				906602421B2800CD00424684 /* Share_QQZone@2x.png */,
 				906602261B27ED1500424684 /* Share_Readability@2x.png */,
 				906602271B27ED1500424684 /* Share_Renren@2x.png */,
+				906602481B28087F00424684 /* Share_Safari@2x.png */,
+				906602491B28087F00424684 /* Share_Safari@3x.png */,
 				906602281B27ED1500424684 /* Share_Sina@2x.png */,
 				906602291B27ED1500424684 /* Share_Tencent@2x.png */,
 				9066022A1B27ED1500424684 /* Share_Twitter@2x.png */,
 				9066022B1B27ED1500424684 /* Share_WeChat@2x.png */,
+				906602441B2804AC00424684 /* Share_WeChat_Collection@2x.png */,
+				906602451B2804AC00424684 /* Share_WeChat_Collection@3x.png */,
 				9066022C1B27ED1500424684 /* Share_WeChat_Moments@2x.png */,
 				9066022D1B27ED1500424684 /* Share_Weixin@2x.png */,
 				9066022E1B27ED1500424684 /* Share_YoudaoNote@2x.png */,
@@ -227,7 +242,10 @@
 			files = (
 				9066023F1B27ED1500424684 /* Share_WeChat_Moments@2x.png in Resources */,
 				9066023A1B27ED1500424684 /* Share_Renren@2x.png in Resources */,
+				906602431B2800CD00424684 /* Share_QQZone@2x.png in Resources */,
 				906602401B27ED1500424684 /* Share_Weixin@2x.png in Resources */,
+				906602461B2804AC00424684 /* Share_WeChat_Collection@2x.png in Resources */,
+				9066024B1B28087F00424684 /* Share_Safari@3x.png in Resources */,
 				906602381B27ED1500424684 /* Share_QQ@2x.png in Resources */,
 				9066023C1B27ED1500424684 /* Share_Tencent@2x.png in Resources */,
 				906602391B27ED1500424684 /* Share_Readability@2x.png in Resources */,
@@ -243,9 +261,11 @@
 				9066023B1B27ED1500424684 /* Share_Sina@2x.png in Resources */,
 				906602321B27ED1500424684 /* Share_Evernote@2x.png in Resources */,
 				906602411B27ED1500424684 /* Share_YoudaoNote@2x.png in Resources */,
+				906602471B2804AC00424684 /* Share_WeChat_Collection@3x.png in Resources */,
 				906602331B27ED1500424684 /* Share_Facebook@2x.png in Resources */,
 				906602361B27ED1500424684 /* Share_Message@2x.png in Resources */,
 				9066023D1B27ED1500424684 /* Share_Twitter@2x.png in Resources */,
+				9066024A1B28087F00424684 /* Share_Safari@2x.png in Resources */,
 				9041E1231B248471005684A3 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
