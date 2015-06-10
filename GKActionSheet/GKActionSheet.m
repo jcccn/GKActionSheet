@@ -20,6 +20,10 @@
 
 @implementation GKActionSheetItem
 
++ (instancetype)itemWithImage:(UIImage *)image title:(NSString *)title handler:(GKActionSheetItemHandler)handler {
+    return [[self alloc] initWithImage:image title:title handler:handler];
+}
+
 - (instancetype)initWithImage:(UIImage *)image title:(NSString *)title handler:(GKActionSheetItemHandler)handler {
     self = [super init];
     if (self) {
@@ -42,7 +46,7 @@
 
 - (void)initItem {
     self.titleColor = [UIColor colorWithWhite:0.1f alpha:1.0f];
-    self.titleFont = [UIFont systemFontOfSize:14];
+    self.titleFont = [UIFont systemFontOfSize:12];
 }
 
 @end
@@ -103,6 +107,10 @@
 @end
 
 @implementation GKActionSheet
+
++ (instancetype)actionSheetWithTitle:(NSString *)title items:(NSArray *)items cancelButtonTitle:(NSString *)cancelButtonTitle {
+    return [[self alloc] initWithTitle:title items:items cancelButtonTitle:cancelButtonTitle];
+}
 
 - (instancetype)initWithTitle:(NSString *)title items:(NSArray *)items cancelButtonTitle:(NSString *)cancelButtonTitle {
     self = [super initWithFrame:CGRectMake(0, 0, CGRectGetWidth([UIScreen mainScreen].bounds), CGRectGetHeight([UIScreen mainScreen].bounds))];
@@ -311,7 +319,7 @@
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(x - 5, y + 62, BUTTON_WIDTH + 10, 14)];
         label.text = item.title;
         label.textColor = item.titleColor;
-        label.font = [UIFont systemFontOfSize:12];
+        label.font = item.titleFont;
         label.adjustsFontSizeToFitWidth = YES;
         label.backgroundColor = [UIColor clearColor];
         label.textAlignment = NSTextAlignmentCenter;

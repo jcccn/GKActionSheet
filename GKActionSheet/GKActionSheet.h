@@ -23,6 +23,8 @@ typedef void(^GKButtonHandler)(UIButton *button);
 
 @property (nonatomic, copy) GKActionSheetItemHandler handler;
 
++ (instancetype)itemWithImage:(UIImage *)image title:(NSString *)title handler:(GKActionSheetItemHandler)handler;
+
 - (instancetype)initWithImage:(UIImage *)image title:(NSString *)title handler:(GKActionSheetItemHandler)handler;
 
 @end
@@ -31,6 +33,7 @@ typedef void(^GKButtonHandler)(UIButton *button);
 
 @interface GKActionSheet : UIView
 
++ (instancetype)actionSheetWithTitle:(NSString *)title items:(NSArray *)items cancelButtonTitle:(NSString *)cancelButtonTitle;
 - (instancetype)initWithTitle:(NSString *)title items:(NSArray *)items cancelButtonTitle:(NSString *)cancelButtonTitle;
 
 - (void)addItem:(GKActionSheetItem *)item;
