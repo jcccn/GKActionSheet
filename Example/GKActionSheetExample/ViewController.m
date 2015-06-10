@@ -30,19 +30,25 @@
 }
 
 - (void)showButtonClicked:(id)sender {
-    GKActionSheetItem *item1 = [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_QQ"] title:@"QQ" handler:^(GKActionSheetItem *item) {
-        NSLog(@"点击了：%@", item.title);
+    GKActionSheetItemHandler handler = ^(GKActionSheetItem *item) {
+        NSLog(@"分享到：%@", item.title);
+    };
+    NSArray *items = @[[[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_QQ"] title:@"QQ" handler:handler],
+                      [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_WeChat"] title:@"微信" handler:handler],
+                      [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_WeChat_Moments"] title:@"朋友圈" handler:handler],
+                      [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_Sina"] title:@"微博" handler:handler],
+                      [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_Evernote"] title:@"印象笔记" handler:handler],
+                       [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_Pocket"] title:@"Pocket" handler:handler],
+                       [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_Copylink"] title:@"复制链接" handler:handler],
+                       [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_Email"] title:@"电子邮件" handler:handler],
+                       [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_Message"] title:@"信息" handler:handler],
+                       [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_Twitter"] title:@"Twitter" handler:handler],
+                       [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_Facebook"] title:@"Facebook" handler:handler]
+                      ];
+    GKActionSheet *actionSheet = [[GKActionSheet alloc] initWithTitle:@"分享这篇文章" items:items cancelButtonTitle:@"取 消"];
+    [actionSheet setDestructiveButtonWithTitle:@"收 藏" handler:^(UIButton *button) {
+        NSLog(@"已收藏");
     }];
-    GKActionSheetItem *item2 = [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_WeChat"] title:@"微信" handler:^(GKActionSheetItem *item) {
-        NSLog(@"点击了：%@", item.title);
-    }];
-    GKActionSheetItem *item3 = [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_WeChat_Moments"] title:@"朋友圈" handler:^(GKActionSheetItem *item) {
-        NSLog(@"点击了：%@", item.title);
-    }];
-    GKActionSheetItem *item4 = [[GKActionSheetItem alloc] initWithImage:[UIImage imageNamed:@"Share_Sina"] title:@"微博" handler:^(GKActionSheetItem *item) {
-        NSLog(@"点击了：%@", item.title);
-    }];
-    GKActionSheet *actionSheet = [[GKActionSheet alloc] initWithTitle:@"请选择您的操作" items:@[item1, item2, item3, item4, item1, item2, item3, item4, item1, item2, item3, item4, item1, item2, item3, item4] cancelButtonTitle:@"取消"];
     [actionSheet show];
 }
 

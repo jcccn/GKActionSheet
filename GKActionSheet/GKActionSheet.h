@@ -12,6 +12,7 @@
 @class GKActionSheet;
 
 typedef void(^GKActionSheetItemHandler)(GKActionSheetItem *item);
+typedef void(^GKButtonHandler)(UIButton *button);
 
 @interface GKActionSheetItem : NSObject
 
@@ -33,6 +34,7 @@ typedef void(^GKActionSheetItemHandler)(GKActionSheetItem *item);
 - (instancetype)initWithTitle:(NSString *)title items:(NSArray *)items cancelButtonTitle:(NSString *)cancelButtonTitle;
 
 - (void)addItem:(GKActionSheetItem *)item;
+- (void)setDestructiveButtonWithTitle:(NSString *)title handler:(GKButtonHandler)handler;
 
 - (void)show;
 - (void)showFromView:(UIView *)view;

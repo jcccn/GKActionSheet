@@ -8,7 +8,9 @@
 
 #import "GKActionSheet.h"
 
-@class GKActionSheetItemCell;
+#define BUTTON_WIDTH    60
+#define BUTTON_HEIGHT   60
+
 
 @interface GKActionSheetItem ()
 
@@ -47,45 +49,46 @@
 
 #pragma mark -
 
-@interface GKActionSheetItemCell : UICollectionViewCell
+@interface UIImage (GKActionSheet)
 
-@property (nonatomic, strong) UIImageView *iconImageView;
-@property (nonatomic, strong) UILabel *titleLabel;
++ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
 
 @end
 
-@implementation GKActionSheetItemCell
+@implementation UIImage (GKActionSheet)
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake((CGRectGetWidth(frame) - 40) / 2 , 5, 40, 40)];
-        self.iconImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
-        self.iconImageView.contentMode = UIViewContentModeScaleAspectFit;
-        [self.contentView addSubview:self.iconImageView];
-        
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, CGRectGetMaxY(self.iconImageView.frame) + 5, CGRectGetWidth(frame) - 10, 20)];
-        self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-        [self.contentView addSubview:self.titleLabel];
-        self.titleLabel.adjustsFontSizeToFitWidth = YES;
-        self.titleLabel.textAlignment = NSTextAlignmentCenter;
-        self.titleLabel.backgroundColor = [UIColor clearColor];
-    }
-    return self;
++ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size {
+    CGRect rect = CGRectMake(0.0f, 0.0f, size.width, size.height);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 @end
 
 #pragma mark -
 
-@interface GKActionSheet () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface GKActionSheet () <UIScrollViewDelegate>
 
+@property (nonatomic, weak) UIView *referView;
+
+@property (nonatomic, strong) UIView *maskView;
 @property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UIImageView *shadowImageView;
 @property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UIScrollView *buttonsScrollView;
+@property (nonatomic, strong) UIPageControl *pageControl;
+@property (nonatomic, strong) UIButton *destructiveButton;
 @property (nonatomic, strong) UIButton *cancelButton;
 
 @property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSString *destructiveButtonTitle;
+@property (nonatomic, copy) GKButtonHandler destructiveHandler;
 @property (nonatomic, strong) NSString *cancelButtonTitle;
 @property (nonatomic, strong) NSMutableArray *items;
 
@@ -94,6 +97,8 @@
 - (void)initSubViews;
 
 - (void)prepareForShow;
+
+- (void)addButtons;
 
 @end
 
@@ -127,47 +132,54 @@
 - (void)initSubViews {
     self.items = [NSMutableArray array];
     
-    self.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
+    self.backgroundColor = [UIColor clearColor];
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.bounds) - 265, CGRectGetWidth(self.bounds), 265)];
-    self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    self.contentView.backgroundColor = [UIColor colorWithWhite:0.95f alpha:1.0f];
-    [self addSubview:self.contentView];
+    self.maskView = [[UIView alloc] initWithFrame:self.frame];
+    self.maskView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3f];
+    self.maskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, CGRectGetWidth(self.contentView.bounds) - 10, 30)];
+    
+    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 350)];
+    self.contentView.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
+    
+    CGFloat width = CGRectGetWidth(self.bounds);
+    
+    self.shadowImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, -5, width, 5)];
+    self.shadowImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.frame = self.shadowImageView.bounds;
+    gradient.colors = [NSArray arrayWithObjects:
+                       (id)[UIColor colorWithWhite:0.75f alpha:1.0f].CGColor,
+                       (id)[UIColor colorWithWhite:0.9f alpha:1.0f].CGColor,nil];
+    [self.shadowImageView.layer addSublayer:gradient];
+    
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, width, 20)];
     self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-    [self.contentView addSubview:self.titleLabel];
-    self.titleLabel.adjustsFontSizeToFitWidth = YES;
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.titleLabel.backgroundColor = [UIColor clearColor];
-    self.titleLabel.textColor = [UIColor colorWithWhite:0.1f alpha:1.0f];
+    self.titleLabel.textColor = [UIColor darkGrayColor];
     self.titleLabel.font = [UIFont systemFontOfSize:14];
+    self.titleLabel.backgroundColor = [UIColor clearColor];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
     
-    UICollectionViewFlowLayout *viewLayout = [[UICollectionViewFlowLayout alloc] init];
-    viewLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.titleLabel.frame), CGRectGetWidth(self.contentView.bounds), CGRectGetHeight(self.contentView.bounds) - CGRectGetMaxY(self.titleLabel.frame) - 57)
-                                             collectionViewLayout:viewLayout];
-    self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.collectionView.backgroundColor = [UIColor clearColor];
-    [self.collectionView registerClass:[GKActionSheetItemCell class] forCellWithReuseIdentifier:@"GKActionSheetItemCell"];
-    self.collectionView.pagingEnabled = YES;
-    self.collectionView.dataSource = self;
-    self.collectionView.delegate = self;
-    [self.contentView addSubview:self.collectionView];
+    self.buttonsScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.titleLabel.frame), width, 180)];
+    self.buttonsScrollView.pagingEnabled = YES;
+    self.buttonsScrollView.scrollEnabled = YES;
+    self.buttonsScrollView.scrollsToTop = NO;
+    self.buttonsScrollView.delegate = self;
+    self.buttonsScrollView.showsHorizontalScrollIndicator = NO;
     
-    self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(20, CGRectGetHeight(self.contentView.bounds) - 46, CGRectGetWidth(self.contentView.bounds) - 40, 36)];
-    self.cancelButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [self.cancelButton setTitle:@"取消" forState:UIControlStateNormal];
-    [self.cancelButton setTitleColor:[UIColor colorWithWhite:0.1f alpha:1.0f] forState:UIControlStateNormal];
-    [self.cancelButton setTitleColor:[UIColor colorWithWhite:0.3f alpha:1.0f] forState:UIControlStateHighlighted];
-    [self.cancelButton addTarget:self action:@selector(cancelButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.contentView addSubview:self.cancelButton];
+    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.buttonsScrollView.frame), width, 20)];
+    self.pageControl.numberOfPages = 1;
+    self.pageControl.userInteractionEnabled = NO;
+    self.pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
+    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMinY(self.cancelButton.frame) - 11, CGRectGetWidth(self.contentView.bounds), 1.0f / [UIScreen mainScreen].scale)];
-    line.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    line.backgroundColor = [UIColor grayColor];
-    [self.contentView addSubview:line];
+    [self addSubview:self.maskView];
+    [self addSubview:self.contentView];
+    [self.contentView addSubview:self.shadowImageView];
+    [self.contentView addSubview:self.buttonsScrollView];
+    [self.contentView addSubview:self.titleLabel];
+    [self.contentView addSubview:self.pageControl];
 }
 
 - (void)addItem:(GKActionSheetItem *)item {
@@ -176,106 +188,210 @@
     }
 }
 
+- (void)setDestructiveButtonWithTitle:(NSString *)title handler:(GKButtonHandler)handler {
+    self.destructiveButtonTitle = title;
+    self.destructiveHandler = handler;
+}
+
 - (void)show {
     [self showFromView:nil];
 }
 
 - (void)showFromView:(UIView *)view {
-    if (self.isShowing) {
-        return;
-        
-    }
-    
-    UIView *superView = view;
-    if ( ! view) {
+    UIView *referView;
+    if ( ! referView) {
         UIViewController *controller = [UIApplication sharedApplication].keyWindow.rootViewController;
         while (controller.presentedViewController != nil) {
             controller = controller.presentedViewController;
         }
-        superView = controller.view;
+        referView = controller.view;
     }
     
-    if (self.superview) {
-        [self removeFromSuperview];
-    }
-    
-    [superView addSubview:self];
-    
-    self.alpha = 0;
+    self.referView = referView;
     
     [self prepareForShow];
     
-    [UIView animateWithDuration:0.25f animations:^{
-        self.alpha = 1;
-        self.showing = YES;
+    CGRect screen = referView.frame;
+    self.frame = screen;
+    self.maskView.frame = screen;
+    self.maskView.alpha = 0;
+    CGRect frame = self.contentView.frame;
+    frame.origin.y = screen.size.height;
+    self.contentView.frame = frame;
+    [referView addSubview:self];
+    
+    self.showing = YES;
+    
+    [UIView animateWithDuration:0.2f animations:^{
+        CGRect targetFrame = frame;
+        self.maskView.alpha = 1;
+        targetFrame.origin.y = screen.size.height - frame.size.height;
+        self.contentView.frame = targetFrame;
     }];
 }
 
-- (void)prepareForShow {
-    CGRect frame = self.frame;
-    frame.size = self.superview.bounds.size;
-    self.frame = frame;
-    
-    frame = self.contentView.frame;
-    frame.origin.x = 0;
-    frame.origin.y = CGRectGetHeight(self.bounds) - CGRectGetHeight(self.contentView.bounds);
-    self.contentView.frame = frame;
-}
 
 - (void)dismiss {
     if ( ! self.isShowing) {
         return;
     }
     
-    [UIView animateWithDuration:0.25f animations:^{
-        self.alpha = 0;
-        
+    [UIView animateWithDuration:0.2f animations:^{
+        CGRect screen = self.referView.frame;
+        self.maskView.alpha = 0;
+        CGRect frame = self.contentView.frame;
+        frame.origin.y = screen.size.height;
+        self.contentView.frame = frame;
+        [self.referView addSubview:self];
     } completion:^(BOOL finished) {
-        self.showing = NO;
         [self removeFromSuperview];
     }];
 }
 
-- (void)cancelButtonClicked:(id)sender {
-    [self dismiss];
+- (void)prepareForShow {
+    [self addButtons];
+    
+    self.pageControl.hidden = ([self.items count] <= 8);
+    self.pageControl.numberOfPages = ceilf([self.items count] / 8.0f);
+    self.pageControl.userInteractionEnabled = NO;
+
+    
+    CGRect frame = self.frame;
+    frame.size = self.referView.bounds.size;
+    self.frame = frame;
+
+    frame = self.pageControl.frame;
+    frame.origin.y = CGRectGetMaxY(self.buttonsScrollView.frame);
+    self.pageControl.frame = frame;
+    
+    frame = self.destructiveButton.frame;
+    frame.origin.y = CGRectGetMaxY(self.pageControl.frame) + (self.pageControl.hidden ? 0 : 5);
+    self.destructiveButton.frame = frame;
+    
+    frame = self.cancelButton.frame;
+    frame.origin.y = CGRectGetMaxY(self.pageControl.frame) + (self.pageControl.hidden ? 0 : 5) + CGRectGetHeight(self.destructiveButton.bounds) + 10;
+    self.cancelButton.frame = frame;
+    
+    frame = self.contentView.frame;
+    frame.size.height = CGRectGetMaxY(self.cancelButton.frame) + 20;
+    frame.origin.y = CGRectGetHeight(self.bounds) - CGRectGetHeight(frame);
+    self.contentView.frame = frame;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [self.items count];
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    GKActionSheetItemCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"GKActionSheetItemCell" forIndexPath:indexPath];
+- (void)addButtons {
+    CGFloat pageWidth = CGRectGetWidth(self.buttonsScrollView.bounds);
+    CGFloat paddingLeft = 20.0f;
+    CGFloat paddingRight = 20.0f;
+    CGFloat paddingTop = 15.0f;
+    CGFloat paddingBottom = 5.0f;
+    CGFloat spacingHorizontal = (pageWidth - paddingLeft - paddingRight - BUTTON_WIDTH * 4) / 3;
+    CGFloat rowHeight = BUTTON_HEIGHT + 25.0f;
     
-    GKActionSheetItem *item = self.items[indexPath.row];
+    NSUInteger row = 0;
+    NSUInteger col = 0;
+    NSUInteger page = 0;
     
-    cell.iconImageView.image = item.image;
-    cell.titleLabel.text = item.title;
-    cell.titleLabel.textColor = item.titleColor;
-    cell.titleLabel.font = item.titleFont;
-    
-    return cell;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
-    
-    GKActionSheetItem *item = self.items[indexPath.row];
-    
-    [self dismiss];
-    
-    GKActionSheetItemHandler handler = item.handler;
-    if (handler) {
-        handler(item);
+    for (UIView *view in self.buttonsScrollView.subviews) {
+        [view removeFromSuperview];
     }
+    
+    for (NSInteger index = 0, count = [self.items count]; index < count; index ++) {
+        page = index / 8;
+        row = (index % 8) / 4;
+        col = (index % 8) % 4;
+        
+        GKActionSheetItem *item = self.items[index];
+        
+        CGFloat x = pageWidth * page + paddingLeft + (spacingHorizontal + BUTTON_WIDTH) * col;
+        CGFloat y = paddingTop + rowHeight * row;
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(x, y, BUTTON_WIDTH, BUTTON_HEIGHT)];
+        [button setImage:item.image forState:UIControlStateNormal];
+        button.tag = index;
+        [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(x - 5, y + 62, BUTTON_WIDTH + 10, 14)];
+        label.text = item.title;
+        label.textColor = item.titleColor;
+        label.font = [UIFont systemFontOfSize:12];
+        label.adjustsFontSizeToFitWidth = YES;
+        label.backgroundColor = [UIColor clearColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        [button setAccessibilityLabel:item.title];
+        
+        [self.buttonsScrollView addSubview:button];
+        [self.buttonsScrollView addSubview:label];
+        [label setAccessibilityElementsHidden:YES];
+        
+    }
+    
+    CGRect frame = self.buttonsScrollView.frame;
+    frame.size.height = rowHeight * ([self.items count] >= 4 ? 2 : 1) + paddingTop + paddingBottom;
+    self.buttonsScrollView.frame = frame;
+    
+    self.buttonsScrollView.contentSize = CGSizeMake(ceilf([self.items count] / 8.0f) * CGRectGetWidth(self.buttonsScrollView.bounds), CGRectGetHeight(self.buttonsScrollView.bounds));
+    
+    if (self.destructiveButtonTitle || self.destructiveHandler) {
+        if ( ! self.destructiveButton) {
+            self.destructiveButton = [self actionButtonWithTitle:self.destructiveButtonTitle top:CGRectGetMaxY(self.pageControl.frame)];
+            [self.destructiveButton addTarget:self action:@selector(destructiveButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        else {
+            [self.destructiveButton removeFromSuperview];
+        }
+    }
+    else {
+        [self.destructiveButton removeFromSuperview];
+        self.destructiveButton = nil;
+    }
+    
+    if ( ! self.cancelButton) {
+        self.cancelButton = [self actionButtonWithTitle:self.cancelButtonTitle top:CGRectGetMaxY(self.pageControl.frame) + CGRectGetHeight(self.destructiveButton.bounds) + 10];
+        [self.cancelButton addTarget:self action:@selector(cancelButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    else {
+        [self.cancelButton removeFromSuperview];
+    }
+    
+    [self.contentView addSubview:self.destructiveButton];
+    [self.contentView addSubview:self.cancelButton];
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(60, 80);
+- (UIButton *)actionButtonWithTitle:(NSString *)title top:(CGFloat)top {
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(22, top, CGRectGetWidth(self.contentView.bounds) - 44, 42)];
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont systemFontOfSize:15];
+    [button setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:button.bounds.size] forState:UIControlStateNormal];
+    [button setBackgroundImage:[UIImage imageWithColor:[UIColor colorWithWhite:0.8f alpha:1.0f] size:button.bounds.size] forState:UIControlStateHighlighted];
+    return button;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-    return UIEdgeInsetsMake(5, 10, 5, 10);
+- (IBAction)buttonClicked:(id)sender {
+    NSInteger index = ((UIButton *)sender).tag;
+    if (index < [self.items count]) {
+        GKActionSheetItem *item = self.items[index];
+        GKActionSheetItemHandler handler = item.handler;
+        if (handler) {
+            handler(item);
+        }
+    }
+    
+    [self dismiss];
+}
+
+- (IBAction)destructiveButtonClicked:(id)sender {
+    GKButtonHandler handler = self.destructiveHandler;
+    if (handler) {
+        handler(sender);
+    }
+    [self dismiss];
+}
+
+- (IBAction)cancelButtonClicked:(id)sender {
+    [self dismiss];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    self.pageControl.currentPage = (NSInteger)scrollView.contentOffset.x / CGRectGetWidth(self.bounds);
 }
 
 @end
