@@ -17,19 +17,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="antarctic" translatesAutoresizingMaskIntoConstraints="NO" id="YR0-D4-gKY">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1q3-N4-DwT">
-                                <rect key="frame" x="270" y="285" width="60" height="30"/>
+                                <rect key="frame" x="240" y="280" width="120" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="1Nn-Ld-1cg"/>
-                                    <constraint firstAttribute="height" constant="30" id="oYY-Ap-h7b"/>
+                                    <constraint firstAttribute="width" constant="120" id="1Nn-Ld-1cg"/>
+                                    <constraint firstAttribute="height" constant="40" id="oYY-Ap-h7b"/>
                                 </constraints>
-                                <state key="normal" title="Show">
+                                <state key="normal" title="现 身 吧">
+                                    <color key="titleColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="YR0-D4-gKY" firstAttribute="centerY" secondItem="1q3-N4-DwT" secondAttribute="centerY" id="88s-Gc-k5V"/>
+                            <constraint firstItem="YR0-D4-gKY" firstAttribute="centerX" secondItem="1q3-N4-DwT" secondAttribute="centerX" id="KPm-1n-6Ks"/>
+                            <constraint firstItem="YR0-D4-gKY" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="PXB-r5-lhc"/>
+                            <constraint firstItem="YR0-D4-gKY" firstAttribute="bottom" secondItem="2fi-mo-0CV" secondAttribute="top" id="dgy-lb-OXl"/>
                             <constraint firstAttribute="centerX" secondItem="1q3-N4-DwT" secondAttribute="centerX" id="fcZ-bL-Day"/>
                             <constraint firstAttribute="centerY" secondItem="1q3-N4-DwT" secondAttribute="centerY" id="rpo-qn-p3V"/>
                         </constraints>
@@ -42,4 +51,7 @@
             </objects>
         </scene>
     </scenes>
+    <resources>
+        <image name="antarctic" width="300" height="426"/>
+    </resources>
 </document>
