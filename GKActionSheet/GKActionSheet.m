@@ -93,6 +93,8 @@
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *destructiveButtonTitle;
 @property (nonatomic, copy) GKButtonHandler destructiveHandler;
+@property (nonatomic, strong) NSMutableDictionary *destructiveButtonBackgroundColors;
+@property (nonatomic, strong) NSMutableDictionary *destructiveButtonTitleColors;
 @property (nonatomic, strong) NSString *cancelButtonTitle;
 @property (nonatomic, strong) NSMutableArray *items;
 
@@ -188,6 +190,14 @@
     [self.contentView addSubview:self.buttonsScrollView];
     [self.contentView addSubview:self.titleLabel];
     [self.contentView addSubview:self.pageControl];
+    
+    self.destructiveButtonBackgroundColors = [NSMutableDictionary dictionaryWithCapacity:2];
+    self.destructiveButtonBackgroundColors[@(UIControlStateNormal)] = [UIColor whiteColor];
+    self.destructiveButtonBackgroundColors[@(UIControlStateHighlighted)] = [UIColor colorWithWhite:0.8f alpha:1.0f];
+    
+    self.destructiveButtonTitleColors = [NSMutableDictionary dictionaryWithCapacity:2];
+    self.destructiveButtonTitleColors[@(UIControlStateNormal)] = [UIColor grayColor];
+    self.destructiveButtonTitleColors[@(UIControlStateHighlighted)] = [UIColor grayColor];
 }
 
 - (void)addItem:(GKActionSheetItem *)item {
@@ -199,6 +209,24 @@
 - (void)setDestructiveButtonWithTitle:(NSString *)title handler:(GKButtonHandler)handler {
     self.destructiveButtonTitle = title;
     self.destructiveHandler = handler;
+}
+
+- (void)setDestructiveButtonBackgroundColor:(UIColor *)color forState:(UIControlState)state {
+    if (color) {
+        self.destructiveButtonBackgroundColors[@(state)] = color;
+    }
+    else {
+        [self.destructiveButtonBackgroundColors removeObjectForKey:@(state)];
+    }
+}
+
+- (void)setDestructiveButtonTitleColor:(UIColor *)color forState:(UIControlState)state {
+    if (color) {
+        self.destructiveButtonTitleColors[@(state)] = color;
+    }
+    else {
+        [self.destructiveButtonTitleColors removeObjectForKey:@(state)];
+    }
 }
 
 - (void)show {
@@ -341,6 +369,16 @@
         if ( ! self.destructiveButton) {
             self.destructiveButton = [self actionButtonWithTitle:self.destructiveButtonTitle top:CGRectGetMaxY(self.pageControl.frame)];
             [self.destructiveButton addTarget:self action:@selector(destructiveButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            
+            UIButton *button = self.destructiveButton;
+            for (NSNumber *state in self.destructiveButtonBackgroundColors.allKeys) {
+                UIColor *color = self.destructiveButtonBackgroundColors[state];
+                [button setBackgroundImage:[UIImage imageWithColor:color size:button.bounds.size] forState:[state unsignedIntegerValue]];
+            }
+            for (NSNumber *state in self.destructiveButtonTitleColors.allKeys) {
+                UIColor *color = self.destructiveButtonTitleColors[state];
+                [button setTitleColor:color forState:[state unsignedIntegerValue]];
+            }
         }
         else {
             [self.destructiveButton removeFromSuperview];

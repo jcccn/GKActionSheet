@@ -49,6 +49,8 @@
     [actionSheet setDestructiveButtonWithTitle:@"收 藏" handler:^(UIButton *button) {
         NSLog(@"已收藏");
     }];
+    [actionSheet setDestructiveButtonBackgroundColor:[UIColor colorWithRed:56/255.0f green:187/255.0f blue:73/255.0f alpha:1.0f]
+                                            forState:UIControlStateNormal];
     [actionSheet show];
 }
 
