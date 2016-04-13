@@ -198,6 +198,16 @@
     self.destructiveButtonTitleColors = [NSMutableDictionary dictionaryWithCapacity:2];
     self.destructiveButtonTitleColors[@(UIControlStateNormal)] = [UIColor grayColor];
     self.destructiveButtonTitleColors[@(UIControlStateHighlighted)] = [UIColor grayColor];
+    
+    
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleMaskTapGesture:)];
+    gesture.numberOfTouchesRequired = 1;
+    gesture.numberOfTapsRequired = 1;
+    [self.maskView addGestureRecognizer:gesture];
+}
+
+- (void)handleMaskTapGesture:(UIGestureRecognizer *)gestureRecognizer {
+    [self dismiss];
 }
 
 - (void)addItem:(GKActionSheetItem *)item {

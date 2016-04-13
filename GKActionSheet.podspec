@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'GKActionSheet'
-  s.version  = '0.0.2'
+  s.version  = '0.0.3'
   s.summary  = 'GKActionSheet is an action sheet with a grid-like layout.'
   s.homepage = 'https://github.com/jcccn/GKActionSheet'
   s.author   = { 'Chuncheng Jiang' => 'jccuestc@gmail.com' }
