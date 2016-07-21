@@ -33,6 +33,8 @@ typedef void(^GKButtonHandler)(UIButton *button);
 
 @interface GKActionSheet : UIView
 
+@property (nonatomic, assign) BOOL shouldDismissOnBackgroundTouch;
+
 + (instancetype)actionSheetWithTitle:(NSString *)title items:(NSArray *)items cancelButtonTitle:(NSString *)cancelButtonTitle;
 - (instancetype)initWithTitle:(NSString *)title items:(NSArray *)items cancelButtonTitle:(NSString *)cancelButtonTitle;
 

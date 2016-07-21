@@ -140,6 +140,8 @@
 }
 
 - (void)initSubViews {
+    self.shouldDismissOnBackgroundTouch = YES;
+    
     self.items = [NSMutableArray array];
     
     self.backgroundColor = [UIColor clearColor];
@@ -207,7 +209,9 @@
 }
 
 - (void)handleMaskTapGesture:(UIGestureRecognizer *)gestureRecognizer {
-    [self dismiss];
+    if (self.shouldDismissOnBackgroundTouch) {
+        [self dismiss];
+    }
 }
 
 - (void)addItem:(GKActionSheetItem *)item {
