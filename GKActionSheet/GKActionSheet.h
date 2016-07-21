@@ -42,7 +42,7 @@ typedef void(^GKButtonHandler)(UIButton *button);
 - (void)setDestructiveButtonWithTitle:(NSString *)title handler:(GKButtonHandler)handler;
 - (void)setDestructiveButtonBackgroundColor:(UIColor *)color forState:(UIControlState)state;
 - (void)setDestructiveButtonTitleColor:(UIColor *)color forState:(UIControlState)state;
-
+- (void)setCancelButtonHandler:(GKButtonHandler)handler;
 
 - (void)show;
 - (void)showFromView:(UIView *)view;

@@ -93,6 +93,7 @@
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *destructiveButtonTitle;
 @property (nonatomic, copy) GKButtonHandler destructiveHandler;
+@property (nonatomic, copy) GKButtonHandler cancelHandler;
 @property (nonatomic, strong) NSMutableDictionary *destructiveButtonBackgroundColors;
 @property (nonatomic, strong) NSMutableDictionary *destructiveButtonTitleColors;
 @property (nonatomic, strong) NSString *cancelButtonTitle;
@@ -241,6 +242,10 @@
     else {
         [self.destructiveButtonTitleColors removeObjectForKey:@(state)];
     }
+}
+
+- (void)setCancelButtonHandler:(GKButtonHandler)handler {
+    self.cancelHandler = handler;
 }
 
 - (void)show {
@@ -447,6 +452,10 @@
 }
 
 - (IBAction)cancelButtonClicked:(id)sender {
+    GKButtonHandler handler = self.cancelHandler;
+    if (handler) {
+        handler(sender);
+    }
     [self dismiss];
 }
 
