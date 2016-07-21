@@ -173,6 +173,7 @@
     self.titleLabel.font = [UIFont systemFontOfSize:14];
     self.titleLabel.backgroundColor = [UIColor clearColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.numberOfLines = 0;
     
     self.buttonsScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.titleLabel.frame), width, 180)];
     self.buttonsScrollView.pagingEnabled = YES;
@@ -314,6 +315,15 @@
     CGRect frame = self.frame;
     frame.size = self.referView.bounds.size;
     self.frame = frame;
+    
+    frame = self.titleLabel.frame;
+    [self.titleLabel sizeToFit];
+    frame.size.height = MAX(20, CGRectGetHeight(self.titleLabel.bounds));
+    self.titleLabel.frame = frame;
+    
+    frame = self.buttonsScrollView.frame;
+    frame.origin.y = CGRectGetMaxY(self.titleLabel.frame);
+    self.buttonsScrollView.frame = frame;
 
     frame = self.pageControl.frame;
     frame.origin.y = CGRectGetMaxY(self.buttonsScrollView.frame);
