@@ -167,7 +167,7 @@
                        (id)[UIColor colorWithWhite:0.9f alpha:1.0f].CGColor,nil];
     [self.shadowImageView.layer addSublayer:gradient];
     
-    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, width, 20)];
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, width - 20, 20)];
     self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     self.titleLabel.textColor = [UIColor darkGrayColor];
     self.titleLabel.font = [UIFont systemFontOfSize:14];
@@ -389,7 +389,7 @@
     }
     
     CGRect frame = self.buttonsScrollView.frame;
-    frame.size.height = rowHeight * ([self.items count] >= 4 ? 2 : 1) + paddingTop + paddingBottom;
+    frame.size.height = rowHeight * ([self.items count] > 4 ? 2 : 1) + paddingTop + paddingBottom;
     self.buttonsScrollView.frame = frame;
     
     self.buttonsScrollView.contentSize = CGSizeMake(ceilf([self.items count] / 8.0f) * CGRectGetWidth(self.buttonsScrollView.bounds), CGRectGetHeight(self.buttonsScrollView.bounds));
